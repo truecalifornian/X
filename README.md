@@ -4,9 +4,6 @@
 
 A sophisticated web application for creating advanced X.COM searches with real-time URL generation, comprehensive analytics, and intelligent templates. Transform your social media research with professional-grade tools.
 
-## 🚀 Live Demo
-
-**Experience XSearch Pro in action:** [https://5il5xsne7dlvm.ok.kimi.link](https://5il5xsne7dlvm.ok.kimi.link)
 
 ## ✨ Features
 
