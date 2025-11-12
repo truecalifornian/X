@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Templates - XSearch Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-slate: #1e293b;
+            --charcoal: #334155;
+            --accent-blue: #3b82f6;
+            --success-green: #10b981;
+            --light-gray: #f8fafc;
+            --medium-gray: #64748b;
+            --warning-amber: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--deep-slate) 0%, var(--charcoal) 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            color: var(--light-gray);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-blue);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .template-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-filter {
+            transition: all 0.3s ease;
+        }
+        
+        .category-filter.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        .category-filter:not(.active):hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+        
+        .template-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .parameter-tag {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .aurora-bg {
+            background: linear-gradient(45deg, 
+                rgba(59, 130, 246, 0.1) 0%, 
+                rgba(16, 185, 129, 0.1) 50%, 
+                rgba(245, 158, 11, 0.1) 100%);
+            background-size: 400% 400%;
+            animation: aurora 8s ease-in-out infinite;
+        }
+        
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">XS</span>
+                    </div>
+                    <span class="text-white font-bold text-xl">XSearch Pro</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link font-medium">Search</a>
+                    <a href="analytics.html" class="nav-link font-medium">Analytics</a>
+                    <a href="templates.html" class="nav-link font-medium text-blue-400">Templates</a>
+                    <a href="documentation.html" class="nav-link font-medium">Docs</a>
+                </div>
+                
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Create Template
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-24 pb-12 relative overflow-hidden">
+        <div class="absolute inset-0 aurora-bg opacity-30"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+                    Search Template Library
+                </h1>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+                    Pre-built search configurations for common use cases. Jump-start your X.COM research with expertly crafted templates.
+                </p>
+                
+                <!-- Search Bar -->
+                <div class="max-w-2xl mx-auto">
+                    <div class="relative">
+                        <input type="text" id="template-search" placeholder="Search templates..." 
+                               class="w-full bg-gray-800 border border-gray-600 rounded-xl px-6 py-4 pl-12 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+                        <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            🔍
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button class="category-filter active px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="all">
+                    All Templates
+                </button>
+                <button class="category-filter px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="news">
+                    📰 News & Media
+                </button>
+                <button class="category-filter px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="marketing">
+                    📈 Marketing
+                </button>
+                <button class="category-filter px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="research">
+                    🔬 Research
+                </button>
+                <button class="category-filter px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="competitor">
+                    🎯 Competitor Analysis
+                </button>
+                <button class="category-filter px-6 py-3 rounded-xl font-medium bg-gray-700 text-gray-300" data-category="trending">
+                    🔥 Trending
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Grid -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div id="templates-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Templates will be populated by JavaScript -->
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="load-more" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                    Load More Templates
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Template Preview Modal -->
+    <div id="template-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="glass-card rounded-2xl p-8 max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="modal-title" class="text-white font-semibold text-2xl"></h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-3xl">×</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-white font-semibold text-lg mb-4">Description</h4>
+                    <p id="modal-description" class="text-gray-300 mb-6"></p>
+                    
+                    <h4 class="text-white font-semibold text-lg mb-4">Parameters</h4>
+                    <div id="modal-parameters" class="space-y-2 mb-6"></div>
+                    
+                    <h4 class="text-white font-semibold text-lg mb-4">Best For</h4>
+                    <p id="modal-use-cases" class="text-gray-300"></p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold text-lg mb-4">Generated URL</h4>
+                    <div id="modal-url" class="bg-gray-800 rounded-lg p-4 text-sm font-mono text-gray-300 mb-6 break-all"></div>
+                    
+                    <div class="space-y-3">
+                        <button onclick="useTemplate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-300">
+                            Use This Template
+                        </button>
+                        
+                        <button onclick="copyTemplateURL()" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-all duration-300">
+                            Copy URL
+                        </button>
+                        
+                        <button onclick="customizeTemplate()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition-all duration-300">
+                            Customize Template
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">XS</span>
+                    </div>
+                    <span class="text-white font-bold text-xl">XSearch Pro</span>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Professional X.COM search tools for advanced users and businesses.
+                </p>
+                <div class="text-gray-500 text-sm">
+                    © 2024 XSearch Pro. Built with modern web technologies for optimal performance.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Template data
+        const templates = [
+            {
+                id: 1,
+                name: "Viral Content Tracker",
+                category: "trending",
+                description: "Find highly engaging viral content with significant social proof. Perfect for identifying trending topics and viral posts.",
+                icon: "🔥",
+                color: "bg-red-600",
+                parameters: ["min_faves:50", "min_retweets:20", "min_replies:10", "-filter:links"],
+                useCases: "Content creators, social media managers, trend analysts looking for viral content opportunities.",
+                searchTerm: "viral"
+            },
+            {
+                id: 2,
+                name: "Breaking News Monitor",
+                category: "news",
+                description: "Track breaking news and current events with minimum engagement thresholds to filter out noise.",
+                icon: "📰",
+                color: "bg-blue-600",
+                parameters: ["min_faves:5", "min_retweets:2", "-filter:replies", "since:2024-01-01"],
+                useCases: "Journalists, news aggregators, media monitoring teams, crisis communication managers.",
+                searchTerm: "breaking news"
+            },
+            {
+                id: 3,
+                name: "Industry Expert Insights",
+                category: "research",
+                description: "Discover insights from verified industry experts and thought leaders in your field.",
+                icon: "🧠",
+                color: "bg-purple-600",
+                parameters: ["min_faves:25", "filter:verified", "-filter:replies", "min_retweets:5"],
+                useCases: "Researchers, analysts, business strategists, professional development teams.",
+                searchTerm: "industry insights"
+            },
+            {
+                id: 4,
+                name: "Competitor Mentions",
+                category: "competitor",
+                description: "Monitor mentions of your competitors with engagement filters to identify key conversations.",
+                icon: "🎯",
+                color: "bg-green-600",
+                parameters: ["@competitor", "min_faves:3", "-filter:links", "since:2024-01-01"],
+                useCases: "Competitive intelligence teams, marketing managers, brand monitoring specialists.",
+                searchTerm: "@competitor"
+            },
+            {
+                id: 5,
+                name: "Product Launch Tracker",
+                category: "marketing",
+                description: "Track conversations around product launches with quality filters for market research.",
+                icon: "🚀",
+                color: "bg-amber-600",
+                parameters: ["min_faves:15", "min_retweets:5", "-filter:replies", "-filter:links"],
+                useCases: "Product managers, marketing teams, launch coordinators, market researchers.",
+                searchTerm: "product launch"
+            },
+            {
+                id: 6,
+                name: "Customer Feedback Finder",
+                category: "research",
+                description: "Find customer feedback and reviews with specific engagement patterns for sentiment analysis.",
+                icon: "💬",
+                color: "bg-teal-600",
+                parameters: ["min_faves:2", "min_replies:1", "-filter:links", "-filter:images"],
+                useCases: "Customer success teams, product researchers, UX researchers, brand managers.",
+                searchTerm: "customer feedback"
+            },
+            {
+                id: 7,
+                name: "Influencer Content",
+                category: "marketing",
+                description: "Discover high-performing content from influencers in your industry for collaboration opportunities.",
+                icon: "⭐",
+                color: "bg-pink-600",
+                parameters: ["min_faves:100", "min_retweets:25", "filter:verified", "-filter:links"],
+                useCases: "Influencer marketing teams, partnership managers, content strategists.",
+                searchTerm: "influencer content"
+            },
+            {
+                id: 8,
+                name: "Tech Trends Explorer",
+                category: "trending",
+                description: "Explore emerging technology trends with engagement filters to identify genuine innovations.",
+                icon: "💻",
+                color: "bg-indigo-600",
+                parameters: ["min_faves:30", "min_retweets:10", "since:2024-01-01", "-filter:replies"],
+                useCases: "Tech analysts, innovation teams, R&D departments, venture capitalists.",
+                searchTerm: "tech trends"
+            },
+            {
+                id: 9,
+                name: "Event Coverage Hub",
+                category: "news",
+                description: "Monitor live event coverage with real-time engagement filtering for comprehensive coverage.",
+                icon: "📸",
+                color: "bg-orange-600",
+                parameters: ["min_faves:10", "-filter:links", "since:2024-12-01", "min_retweets:3"],
+                useCases: "Event organizers, media teams, live bloggers, social media coordinators.",
+                searchTerm: "event coverage"
+            },
+            {
+                id: 10,
+                name: "SaaS Product Hunt",
+                category: "competitor",
+                description: "Discover new SaaS products and tools with quality filters for market intelligence.",
+                icon: "⚙️",
+                color: "bg-cyan-600",
+                parameters: ["min_faves:20", "-filter:replies", "-filter:links", "min_retweets:5"],
+                useCases: "SaaS founders, product managers, competitive intelligence analysts, investors.",
+                searchTerm: "saas product"
+            },
+            {
+                id: 11,
+                name: "Educational Content",
+                category: "research",
+                description: "Find educational and learning content with engagement metrics for quality assessment.",
+                icon: "📚",
+                color: "bg-lime-600",
+                parameters: ["min_faves:15", "-filter:links", "min_retweets:3", "-filter:images"],
+                useCases: "Educators, content creators, e-learning platforms, professional development teams.",
+                searchTerm: "educational content"
+            },
+            {
+                id: 12,
+                name: "Startup Ecosystem",
+                category: "trending",
+                description: "Track startup ecosystem conversations with filters for funding and innovation discussions.",
+                icon: "🌱",
+                color: "bg-emerald-600",
+                parameters: ["min_faves:25", "min_retweets:8", "-filter:replies", "since:2024-01-01"],
+                useCases: "Startup founders, investors, accelerators, entrepreneurship communities.",
+                searchTerm: "startup ecosystem"
+            }
+        ];
+
+        let currentCategory = 'all';
+        let currentTemplates = templates;
+        let selectedTemplate = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTemplates();
+            setupEventListeners();
+            animateCards();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Category filters
+            document.querySelectorAll('.category-filter').forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    filterByCategory(category);
+                });
+            });
+
+            // Template search
+            document.getElementById('template-search').addEventListener('input', function() {
+                searchTemplates(this.value);
+            });
+
+            // Load more button
+            document.getElementById('load-more').addEventListener('click', function() {
+                loadMoreTemplates();
+            });
+        }
+
+        // Filter templates by category
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active filter button
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+            
+            // Filter templates
+            if (category === 'all') {
+                currentTemplates = templates;
+            } else {
+                currentTemplates = templates.filter(template => template.category === category);
+            }
+            
+            renderTemplates();
+        }
+
+        // Search templates
+        function searchTemplates(query) {
+            if (!query.trim()) {
+                currentTemplates = currentCategory === 'all' ? templates : templates.filter(t => t.category === currentCategory);
+            } else {
+                const searchTerm = query.toLowerCase();
+                const baseTemplates = currentCategory === 'all' ? templates : templates.filter(t => t.category === currentCategory);
+                
+                currentTemplates = baseTemplates.filter(template => 
+                    template.name.toLowerCase().includes(searchTerm) ||
+                    template.description.toLowerCase().includes(searchTerm) ||
+                    template.useCases.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderTemplates();
+        }
+
+        // Render templates
+        function renderTemplates() {
+            const grid = document.getElementById('templates-grid');
+            
+            if (currentTemplates.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="text-gray-400 text-xl mb-4">🔍</div>
+                        <h3 class="text-white text-xl font-semibold mb-2">No templates found</h3>
+                        <p class="text-gray-400">Try adjusting your search or filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = currentTemplates.map(template => `
+                <div class="template-card glass-card rounded-2xl p-6" onclick="openTemplateModal(${template.id})">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="template-icon ${template.color}">
+                            ${template.icon}
+                        </div>
+                        <div class="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-full">
+                            ${template.category.toUpperCase()}
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-white font-semibold text-lg mb-3">${template.name}</h3>
+                    <p class="text-gray-300 text-sm mb-4 line-clamp-3">${template.description}</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${template.parameters.slice(0, 3).map(param => `
+                            <span class="parameter-tag">${param}</span>
+                        `).join('')}
+                        ${template.parameters.length > 3 ? `<span class="parameter-tag">+${template.parameters.length - 3} more</span>` : ''}
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-400">Click to preview</span>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); useTemplateById(${template.id})" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-medium transition-all duration-300">
+                                Use
+                            </button>
+                            <button onclick="event.stopPropagation(); customizeTemplateById(${template.id})" 
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg text-xs font-medium transition-all duration-300">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            animateCards();
+        }
+
+        // Animate template cards
+        function animateCards() {
+            anime({
+                targets: '.template-card',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuart'
+            });
+        }
+
+        // Open template modal
+        function openTemplateModal(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+            
+            selectedTemplate = template;
+            
+            document.getElementById('modal-title').textContent = template.name;
+            document.getElementById('modal-description').textContent = template.description;
+            document.getElementById('modal-use-cases').textContent = template.useCases;
+            
+            // Parameters
+            const parametersContainer = document.getElementById('modal-parameters');
+            parametersContainer.innerHTML = template.parameters.map(param => `
+                <div class="parameter-tag">${param}</div>
+            `).join('');
+            
+            // URL
+            const baseURL = 'https://x.com/search?f=live&q=';
+            const queryParts = [encodeURIComponent(template.searchTerm)];
+            template.parameters.forEach(param => {
+                queryParts.push(encodeURIComponent(param));
+            });
+            document.getElementById('modal-url').textContent = baseURL + queryParts.join(encodeURIComponent(' '));
+            
+            // Show modal
+            const modal = document.getElementById('template-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Animate modal
+            anime({
+                targets: modal,
+                opacity: [0, 1],
+                duration: 300,
+                easing: 'easeOutQuad'
+            });
+            
+            anime({
+                targets: modal.querySelector('.glass-card'),
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 300,
+                easing: 'easeOutBack'
+            });
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('template-modal');
+            
+            anime({
+                targets: modal,
+                opacity: [1, 0],
+                duration: 300,
+                easing: 'easeInQuad',
+                complete: () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        }
+
+        // Use template
+        function useTemplate() {
+            if (!selectedTemplate) return;
+            
+            // Store template data for the main page
+            localStorage.setItem('selectedTemplate', JSON.stringify(selectedTemplate));
+            
+            // Redirect to main page
+            window.location.href = 'index.html';
+        }
+
+        // Use template by ID
+        function useTemplateById(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+            
+            localStorage.setItem('selectedTemplate', JSON.stringify(template));
+            window.location.href = 'index.html';
+        }
+
+        // Customize template
+        function customizeTemplate() {
+            if (!selectedTemplate) return;
+            
+            localStorage.setItem('customizeTemplate', JSON.stringify(selectedTemplate));
+            window.location.href = 'index.html';
+        }
+
+        // Customize template by ID
+        function customizeTemplateById(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+            
+            localStorage.setItem('customizeTemplate', JSON.stringify(template));
+            window.location.href = 'index.html';
+        }
+
+        // Copy template URL
+        function copyTemplateURL() {
+            if (!selectedTemplate) return;
+            
+            const baseURL = 'https://x.com/search?f=live&q=';
+            const queryParts = [encodeURIComponent(selectedTemplate.searchTerm)];
+            selectedTemplate.parameters.forEach(param => {
+                queryParts.push(encodeURIComponent(param));
+            });
+            const url = baseURL + queryParts.join(encodeURIComponent(' '));
+            
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification('Template URL copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('Failed to copy URL', 'error');
+            });
+        }
+
+        // Load more templates (placeholder)
+        function loadMoreTemplates() {
+            showNotification('All templates loaded', 'info');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-6 z-50 px-6 py-4 rounded-lg text-white font-medium transform translate-x-full transition-transform duration-300`;
+            
+            switch(type) {
+                case 'success':
+                    notification.classList.add('bg-green-600');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-600');
+                    break;
+                case 'warning':
+                    notification.classList.add('bg-amber-600');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-600');
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Make functions globally available
+        window.openTemplateModal = openTemplateModal;
+        window.closeModal = closeModal;
+        window.useTemplate = useTemplate;
+        window.useTemplateById = useTemplateById;
+        window.customizeTemplate = customizeTemplate;
+        window.customizeTemplateById = customizeTemplateById;
+        window.copyTemplateURL = copyTemplateURL;
+    </script>
+</body>
+</html>
