@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - XSearch Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-slate: #1e293b;
+            --charcoal: #334155;
+            --accent-blue: #3b82f6;
+            --success-green: #10b981;
+            --light-gray: #f8fafc;
+            --medium-gray: #64748b;
+            --warning-amber: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--deep-slate) 0%, var(--charcoal) 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            color: var(--light-gray);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-blue);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .sidebar-link {
+            color: var(--medium-gray);
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: block;
+        }
+        
+        .sidebar-link:hover {
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .sidebar-link.active {
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.2);
+            font-weight: 500;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+        
+        .parameter-table {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .parameter-table th {
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
+            padding: 12px 16px;
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .parameter-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+        
+        .parameter-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .doc-section {
+            display: none;
+        }
+        
+        .doc-section.active {
+            display: block;
+        }
+        
+        .search-highlight {
+            background: rgba(59, 130, 246, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">XS</span>
+                    </div>
+                    <span class="text-white font-bold text-xl">XSearch Pro</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link font-medium">Search</a>
+                    <a href="analytics.html" class="nav-link font-medium">Analytics</a>
+                    <a href="templates.html" class="nav-link font-medium">Templates</a>
+                    <a href="documentation.html" class="nav-link font-medium text-blue-400">Docs</a>
+                </div>
+                
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    API Reference
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-20 min-h-screen">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar -->
+                <div class="lg:w-1/4">
+                    <div class="glass-card rounded-2xl p-6 sticky top-24">
+                        <div class="mb-6">
+                            <input type="text" id="doc-search" placeholder="Search docs..." 
+                                   class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+                        </div>
+                        
+                        <nav class="space-y-2">
+                            <a href="#getting-started" class="sidebar-link active" data-section="getting-started">
+                                🚀 Getting Started
+                            </a>
+                            <a href="#search-parameters" class="sidebar-link" data-section="search-parameters">
+                                🔍 Search Parameters
+                            </a>
+                            <a href="#advanced-techniques" class="sidebar-link" data-section="advanced-techniques">
+                                ⚡ Advanced Techniques
+                            </a>
+                            <a href="#templates" class="sidebar-link" data-section="templates">
+                                📋 Templates
+                            </a>
+                            <a href="#analytics" class="sidebar-link" data-section="analytics">
+                                📊 Analytics
+                            </a>
+                            <a href="#api-reference" class="sidebar-link" data-section="api-reference">
+                                🔌 API Reference
+                            </a>
+                            <a href="#best-practices" class="sidebar-link" data-section="best-practices">
+                                ✅ Best Practices
+                            </a>
+                            <a href="#troubleshooting" class="sidebar-link" data-section="troubleshooting">
+                                🔧 Troubleshooting
+                            </a>
+                            <a href="#examples" class="sidebar-link" data-section="examples">
+                                💡 Examples
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Content Area -->
+                <div class="lg:w-3/4">
+                    <div class="glass-card rounded-2xl p-8">
+                        <!-- Getting Started -->
+                        <div id="getting-started" class="doc-section active">
+                            <h1 class="text-3xl font-bold text-white mb-6">Getting Started with XSearch Pro</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p class="text-lg">
+                                    XSearch Pro is a powerful tool for creating advanced X.COM searches with sophisticated parameters. 
+                                    This guide will help you master the art of building effective search queries.
+                                </p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Quick Start</h2>
+                                <ol class="list-decimal list-inside space-y-3">
+                                    <li>Navigate to the <a href="index.html" class="text-blue-400 hover:text-blue-300">Search Builder</a></li>
+                                    <li>Enter your base search term in the main input field</li>
+                                    <li>Add parameters from the categorized panels on the left</li>
+                                    <li>Watch your search URL being built in real-time</li>
+                                    <li>Copy the URL or open it directly in X.COM</li>
+                                </ol>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Key Features</h2>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bg-blue-600 bg-opacity-20 rounded-xl p-6 border border-blue-600 border-opacity-30">
+                                        <h3 class="text-blue-400 font-semibold mb-3">🔍 Advanced Parameters</h3>
+                                        <p>Access all X.COM search parameters including engagement filters, content types, and user targeting.</p>
+                                    </div>
+                                    <div class="bg-green-600 bg-opacity-20 rounded-xl p-6 border border-green-600 border-opacity-30">
+                                        <h3 class="text-green-400 font-semibold mb-3">⚡ Real-time Generation</h3>
+                                        <p>See your search URL being built instantly as you add or remove parameters.</p>
+                                    </div>
+                                    <div class="bg-purple-600 bg-opacity-20 rounded-xl p-6 border border-purple-600 border-opacity-30">
+                                        <h3 class="text-purple-400 font-semibold mb-3">📊 Analytics</h3>
+                                        <p>Track search performance and optimize your strategies with detailed analytics.</p>
+                                    </div>
+                                    <div class="bg-amber-600 bg-opacity-20 rounded-xl p-6 border border-amber-600 border-opacity-30">
+                                        <h3 class="text-amber-400 font-semibold mb-3">🎯 Smart Templates</h3>
+                                        <p>Use pre-built templates for common use cases and customize them for your needs.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search Parameters -->
+                        <div id="search-parameters" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Search Parameters Reference</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Master all available X.COM search parameters to create powerful and precise searches.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Engagement Filters</h2>
+                                <div class="parameter-table">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Description</th>
+                                                <th>Example</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">min_faves:</td>
+                                                <td>Minimum number of likes</td>
+                                                <td class="font-mono text-gray-400">min_faves:10</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">min_retweets:</td>
+                                                <td>Minimum number of retweets</td>
+                                                <td class="font-mono text-gray-400">min_retweets:5</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">min_replies:</td>
+                                                <td>Minimum number of replies</td>
+                                                <td class="font-mono text-gray-400">min_replies:3</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Content Filters</h2>
+                                <div class="parameter-table">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Description</th>
+                                                <th>Example</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">-filter:links</td>
+                                                <td>Exclude posts with links</td>
+                                                <td class="font-mono text-gray-400">-filter:links</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">-filter:replies</td>
+                                                <td>Exclude reply posts</td>
+                                                <td class="font-mono text-gray-400">-filter:replies</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">-filter:images</td>
+                                                <td>Exclude posts with images</td>
+                                                <td class="font-mono text-gray-400">-filter:images</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-mono text-blue-400">filter:verified</td>
+                                                <td>Only from verified accounts</td>
+                                                <td class="font-mono text-gray-400">filter:verified</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">User Filters</h2>
+                                <div class="code-block">
+from:username - Posts from specific user<br>
+to:username - Posts mentioning specific user<br>
+@username - Posts mentioning specific user (alternative)
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Time-based Filters</h2>
+                                <div class="code-block">
+since:2024-01-01 - Posts after specific date<br>
+until:2024-12-31 - Posts before specific date
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Techniques -->
+                        <div id="advanced-techniques" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Advanced Search Techniques</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Take your X.COM searches to the next level with these advanced techniques and strategies.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Combining Parameters</h2>
+                                <p class="mb-4">
+                                    The real power of XSearch Pro comes from combining multiple parameters to create highly targeted searches. 
+                                    Here's how to effectively combine different parameter types:
+                                </p>
+                                
+                                <div class="bg-gray-800 rounded-xl p-6 mb-6">
+                                    <h3 class="text-blue-400 font-semibold mb-3">Example: High-Quality Tech News</h3>
+                                    <div class="code-block">
+Search Term: "artificial intelligence"<br>
+Parameters:<br>
+• min_faves:25 (quality threshold)<br>
+• min_retweets:10 (engagement indicator)<br>
+• -filter:links (focus on original content)<br>
+• since:2024-01-01 (recent content)<br>
+• filter:verified (authoritative sources)
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Negative Filtering</h2>
+                                <p class="mb-4">
+                                    Use negative filters to exclude unwanted content types and focus on what matters most to your research.
+                                </p>
+                                
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bg-green-600 bg-opacity-20 rounded-xl p-6 border border-green-600 border-opacity-30">
+                                        <h3 class="text-green-400 font-semibold mb-3">✅ Include Original Content</h3>
+                                        <p>Use <code class="font-mono text-green-400">-filter:links</code> to find original thoughts and opinions rather than shared articles.</p>
+                                    </div>
+                                    <div class="bg-blue-600 bg-opacity-20 rounded-xl p-6 border border-blue-600 border-opacity-30">
+                                        <h3 class="text-blue-400 font-semibold mb-3">🎯 Focus on Top-Level Posts</h3>
+                                        <p>Use <code class="font-mono text-blue-400">-filter:replies</code> to see only top-level posts and avoid conversation threads.</p>
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Time-based Research</h2>
+                                <p class="mb-4">
+                                    Combine time filters with engagement metrics to track how topics evolve over time.
+                                </p>
+                                
+                                <div class="bg-amber-600 bg-opacity-20 rounded-xl p-6 border border-amber-600 border-opacity-30">
+                                    <h3 class="text-amber-400 font-semibold mb-3">📈 Trend Analysis</h3>
+                                    <p>Create multiple searches with different time ranges to analyze how engagement patterns change over time. This is perfect for identifying emerging trends and measuring campaign effectiveness.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Templates Section -->
+                        <div id="templates" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Using Templates</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Templates provide pre-built search configurations for common use cases, helping you get started quickly.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Available Templates</h2>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-blue-400 font-semibold mb-3">🔥 Viral Content Tracker</h3>
+                                        <p class="text-sm mb-4">Find highly engaging viral content with significant social proof.</p>
+                                        <div class="space-y-2">
+                                            <div class="font-mono text-xs text-gray-400">min_faves:50</div>
+                                            <div class="font-mono text-xs text-gray-400">min_retweets:20</div>
+                                            <div class="font-mono text-xs text-gray-400">-filter:links</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-green-400 font-semibold mb-3">📰 Breaking News Monitor</h3>
+                                        <p class="text-sm mb-4">Track breaking news with minimum engagement thresholds.</p>
+                                        <div class="space-y-2">
+                                            <div class="font-mono text-xs text-gray-400">min_faves:5</div>
+                                            <div class="font-mono text-xs text-gray-400">min_retweets:2</div>
+                                            <div class="font-mono text-xs text-gray-400">-filter:replies</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-purple-400 font-semibold mb-3">🧠 Expert Insights</h3>
+                                        <p class="text-sm mb-4">Discover insights from verified industry experts.</p>
+                                        <div class="space-y-2">
+                                            <div class="font-mono text-xs text-gray-400">min_faves:25</div>
+                                            <div class="font-mono text-xs text-gray-400">filter:verified</div>
+                                            <div class="font-mono text-xs text-gray-400">-filter:replies</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-amber-400 font-semibold mb-3">🎯 Competitor Analysis</h3>
+                                        <p class="text-sm mb-4">Monitor competitor mentions and conversations.</p>
+                                        <div class="space-y-2">
+                                            <div class="font-mono text-xs text-gray-400">@competitor</div>
+                                            <div class="font-mono text-xs text-gray-400">min_faves:3</div>
+                                            <div class="font-mono text-xs text-gray-400">-filter:links</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Creating Custom Templates</h2>
+                                <p class="mb-4">
+                                    Create your own templates by building searches in the Search Builder and saving them for future use. 
+                                    This is perfect for recurring research tasks and team collaboration.
+                                </p>
+                                
+                                <div class="bg-blue-600 bg-opacity-20 rounded-xl p-6 border border-blue-600 border-opacity-30">
+                                    <h3 class="text-blue-400 font-semibold mb-3">💡 Pro Tip</h3>
+                                    <p>Start with a template that's close to your needs, then customize it by adding or removing parameters. This approach saves time while ensuring your searches are perfectly tailored to your requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analytics Section -->
+                        <div id="analytics" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Analytics Dashboard</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Track your search performance and optimize your strategies with comprehensive analytics.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Key Metrics</h2>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-blue-400 font-semibold mb-3">📊 Search Volume</h3>
+                                        <p>Track how many searches you're creating over time. Identify patterns in your research activity.</p>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-green-400 font-semibold mb-3">⚡ Success Rate</h3>
+                                        <p>Measure the effectiveness of your searches based on result quality and engagement.</p>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-purple-400 font-semibold mb-3">🎯 Parameter Usage</h3>
+                                        <p>See which parameters you use most frequently and optimize your search patterns.</p>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-amber-400 font-semibold mb-3">📈 Trend Analysis</h3>
+                                        <p>Analyze search performance over time to identify successful strategies.</p>
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Performance Insights</h2>
+                                <p class="mb-4">
+                                    The analytics dashboard provides actionable insights to improve your search effectiveness:
+                                </p>
+                                
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Optimal posting times for maximum engagement</li>
+                                    <li>Most effective parameter combinations</li>
+                                    <li>Search quality trends over time</li>
+                                    <li>Competitive analysis insights</li>
+                                    <li>Content performance patterns</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- API Reference -->
+                        <div id="api-reference" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">API Reference</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Integrate XSearch Pro functionality into your applications with our comprehensive API.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Authentication</h2>
+                                <div class="code-block">
+// API Key Authentication<br>
+const headers = {<br>
+&nbsp;&nbsp;'Authorization': 'Bearer YOUR_API_KEY',<br>
+&nbsp;&nbsp;'Content-Type': 'application/json'<br>
+};
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Build Search URL</h2>
+                                <div class="code-block">
+POST /api/v1/search/build<br>
+{<br>
+&nbsp;&nbsp;"term": "artificial intelligence",<br>
+&nbsp;&nbsp;"parameters": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"min_faves:25",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"-filter:links",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"since:2024-01-01"<br>
+bsp;&nbsp;]<br>
+}
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Response Format</h2>
+                                <div class="code-block">
+{<br>
+&nbsp;&nbsp;"success": true,<br>
+&nbsp;&nbsp;"data": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"url": "https://x.com/search?f=live&q=artificial%20intelligence%20min_faves%3A25...",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"parameters": [...],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"estimatedResults": 12500<br>
+&nbsp;&nbsp;}<br>
+}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Best Practices -->
+                        <div id="best-practices" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Best Practices</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Follow these best practices to maximize the effectiveness of your X.COM searches.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Search Optimization</h2>
+                                <div class="space-y-4">
+                                    <div class="bg-green-600 bg-opacity-20 rounded-xl p-6 border border-green-600 border-opacity-30">
+                                        <h3 class="text-green-400 font-semibold mb-3">✅ Do</h3>
+                                        <ul class="list-disc list-inside space-y-2">
+                                            <li>Start with broad searches and gradually add filters</li>
+                                            <li>Use engagement thresholds appropriate for your topic</li>
+                                            <li>Combine multiple parameter types for better results</li>
+                                            <li>Test different parameter combinations</li>
+                                            <li>Save successful search configurations as templates</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="bg-red-600 bg-opacity-20 rounded-xl p-6 border border-red-600 border-opacity-30">
+                                        <h3 class="text-red-400 font-semibold mb-3">❌ Don't</h3>
+                                        <ul class="list-disc list-inside space-y-2">
+                                            <li>Use excessively high engagement thresholds for niche topics</li>
+                                            <li>Apply too many filters that might exclude relevant content</li>
+                                            <li>Ignore time-based filters for time-sensitive research</li>
+                                            <li>Use the same template for all research scenarios</li>
+                                            <li>Forget to analyze and optimize your search patterns</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Performance Tips</h2>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-blue-400 font-semibold mb-3">🎯 Targeting</h3>
+                                        <p>Use user-specific filters (from:, to:, @) to focus on key influencers and conversations in your industry.</p>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-purple-400 font-semibold mb-3">⏰ Timing</h3>
+                                        <p>Combine since: and until: parameters to analyze specific time periods and track trend evolution.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Troubleshooting -->
+                        <div id="troubleshooting" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Troubleshooting</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Common issues and solutions when working with XSearch Pro.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Common Issues</h2>
+                                <div class="space-y-6">
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-red-400 font-semibold mb-3">🔍 No Results Found</h3>
+                                        <p class="mb-3"><strong>Problem:</strong> Your search returns no results or very few results.</p>
+                                        <p><strong>Solution:</strong> Try these steps:</p>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Lower your engagement thresholds (min_faves, min_retweets)</li>
+                                            <li>Remove some filters to broaden your search</li>
+                                            <li>Check if your search term is too specific</li>
+                                            <li>Verify that time-based filters aren't too restrictive</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-amber-400 font-semibold mb-3">⚠️ Too Many Results</h3>
+                                        <p class="mb-3"><strong>Problem:</strong> Your search returns an overwhelming number of results.</p>
+                                        <p><strong>Solution:</strong> Try these approaches:</p>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Increase engagement thresholds</li>
+                                            <li>Add more specific filters</li>
+                                            <li>Use time-based filters to focus on recent content</li>
+                                            <li>Include user-specific filters to target key accounts</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="glass-card rounded-xl p-6">
+                                        <h3 class="text-blue-400 font-semibold mb-3">🔗 URL Encoding Issues</h3>
+                                        <p class="mb-3"><strong>Problem:</strong> Search URLs don't work correctly in X.COM.</p>
+                                        <p><strong>Solution:</strong> XSearch Pro automatically handles URL encoding, but if you encounter issues:</p>
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li>Use the copy URL button for proper encoding</li>
+                                            <li>Avoid manually editing generated URLs</li>
+                                            <li>Check for special characters in search terms</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Getting Help</h2>
+                                <p>If you encounter issues not covered here:</p>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Check the <a href="#examples" class="text-blue-400 hover:text-blue-300">Examples section</a> for similar use cases</li>
+                                    <li>Review <a href="#best-practices" class="text-blue-400 hover:text-blue-300">Best Practices</a> for optimization tips</li>
+                                    <li>Contact support through the help widget</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Examples -->
+                        <div id="examples" class="doc-section">
+                            <h1 class="text-3xl font-bold text-white mb-6">Search Examples</h1>
+                            
+                            <div class="space-y-6 text-gray-300">
+                                <p>Practical examples of advanced X.COM searches for various use cases.</p>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Market Research</h2>
+                                <div class="bg-blue-600 bg-opacity-20 rounded-xl p-6 border border-blue-600 border-opacity-30">
+                                    <h3 class="text-blue-400 font-semibold mb-3">🎯 Competitor Analysis</h3>
+                                    <div class="code-block">
+Search Term: "@competitor_name product review"<br>
+Parameters:<br>
+• min_faves:10<br>
+• min_retweets:3<br>
+• -filter:links<br>
+• since:2024-01-01
+                                    </div>
+                                    <p class="mt-3">Find genuine customer feedback about competitor products, excluding promotional content.</p>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Content Strategy</h2>
+                                <div class="bg-green-600 bg-opacity-20 rounded-xl p-6 border border-green-600 border-opacity-30">
+                                    <h3 class="text-green-400 font-semibold mb-3">📈 Trending Topics</h3>
+                                    <div class="code-block">
+Search Term: "#YourIndustry"<br>
+Parameters:<br>
+• min_faves:50<br>
+• min_retweets:20<br>
+• -filter:replies<br>
+• since:2024-12-01
+                                    </div>
+                                    <p class="mt-3">Identify trending topics in your industry with high engagement for content inspiration.</p>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Crisis Management</h2>
+                                <div class="bg-red-600 bg-opacity-20 rounded-xl p-6 border border-red-600 border-opacity-30">
+                                    <h3 class="text-red-400 font-semibold mb-3">⚠️ Brand Monitoring</h3>
+                                    <div class="code-block">
+Search Term: "@your_brand"<br>
+Parameters:<br>
+• min_faves:5<br>
+• -filter:links<br>
+• since:2024-12-15<br>
+• -filter:replies
+                                    </div>
+                                    <p class="mt-3">Monitor brand mentions with moderate engagement to catch potential issues early.</p>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Thought Leadership</h2>
+                                <div class="bg-purple-600 bg-opacity-20 rounded-xl p-6 border border-purple-600 border-opacity-30">
+                                    <h3 class="text-purple-400 font-semibold mb-3">🧠 Expert Insights</h3>
+                                    <div class="code-block">
+Search Term: "artificial intelligence future"<br>
+Parameters:<br>
+• min_faves:100<br>
+• filter:verified<br>
+• min_retweets:25<br>
+• -filter:links
+                                    </div>
+                                    <p class="mt-3">Find high-quality insights from verified experts on specific topics.</p>
+                                </div>
+                                
+                                <h2 class="text-2xl font-semibold text-white mt-8 mb-4">Product Research</h2>
+                                <div class="bg-amber-600 bg-opacity-20 rounded-xl p-6 border border-amber-600 border-opacity-30">
+                                    <h3 class="text-amber-400 font-semibold mb-3">💡 Feature Requests</h3>
+                                    <div class="code-block">
+Search Term: "I wish @product had"<br>
+Parameters:<br>
+• min_faves:2<br>
+• min_replies:1<br>
+• -filter:links<br>
+• since:2024-01-01
+                                    </div>
+                                    <p class="mt-3">Discover feature requests and improvement suggestions from users.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">XS</span>
+                    </div>
+                    <span class="text-white font-bold text-xl">XSearch Pro</span>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Professional X.COM search tools for advanced users and businesses.
+                </p>
+                <div class="text-gray-500 text-sm">
+                    © 2024 XSearch Pro. Built with modern web technologies for optimal performance.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize documentation
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSidebarNavigation();
+            setupSearchFunctionality();
+            animateContent();
+        });
+
+        // Setup sidebar navigation
+        function setupSidebarNavigation() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const sections = document.querySelectorAll('.doc-section');
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetSection = this.dataset.section;
+                    
+                    // Update active states
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show target section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetSection) {
+                            section.classList.add('active');
+                        }
+                    });
+                    
+                    // Animate content
+                    animateContent();
+                });
+            });
+        }
+
+        // Setup search functionality
+        function setupSearchFunctionality() {
+            const searchInput = document.getElementById('doc-search');
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query === '') {
+                    clearSearchHighlights();
+                    return;
+                }
+                
+                searchInContent(query);
+            });
+        }
+
+        // Search in content
+        function searchInContent(query) {
+            const activeSection = document.querySelector('.doc-section.active');
+            if (!activeSection) return;
+            
+            clearSearchHighlights();
+            
+            const textNodes = getTextNodes(activeSection);
+            let matchCount = 0;
+            
+            textNodes.forEach(node => {
+                const text = node.textContent;
+                const regex = new RegExp(`(${query})`, 'gi');
+                
+                if (regex.test(text)) {
+                    matchCount++;
+                    const highlightedText = text.replace(regex, '<span class="search-highlight">$1</span>');
+                    
+                    const wrapper = document.createElement('span');
+                    wrapper.innerHTML = highlightedText;
+                    node.parentNode.replaceChild(wrapper, node);
+                }
+            });
+            
+            if (matchCount > 0) {
+                showNotification(`Found ${matchCount} matches for "${query}"`, 'info');
+            }
+        }
+
+        // Get text nodes from element
+        function getTextNodes(element) {
+            const textNodes = [];
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode: function(node) {
+                        if (node.parentNode.tagName === 'SCRIPT' || 
+                            node.parentNode.tagName === 'STYLE' ||
+                            node.textContent.trim() === '') {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                }
+            );
+            
+            let node;
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+            
+            return textNodes;
+        }
+
+        // Clear search highlights
+        function clearSearchHighlights() {
+            const highlights = document.querySelectorAll('.search-highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
+
+        // Animate content
+        function animateContent() {
+            const activeSection = document.querySelector('.doc-section.active');
+            if (!activeSection) return;
+            
+            anime({
+                targets: activeSection.children,
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuart'
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-6 z-50 px-6 py-4 rounded-lg text-white font-medium transform translate-x-full transition-transform duration-300`;
+            
+            switch(type) {
+                case 'success':
+                    notification.classList.add('bg-green-600');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-600');
+                    break;
+                case 'warning':
+                    notification.classList.add('bg-amber-600');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-600');
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
